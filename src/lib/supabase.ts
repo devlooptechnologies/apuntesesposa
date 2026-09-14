@@ -5,8 +5,12 @@ const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY ?? ''
 
 export const isSupabaseConfigured = Boolean(supabaseUrl && supabaseAnonKey)
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: false,
-  },
-})
+export const supabase = createClient(
+  supabaseUrl || 'https://placeholder.invalid',
+  supabaseAnonKey || 'public-anon-key',
+  {
+    auth: {
+      persistSession: false,
+    },
+  }
+)
