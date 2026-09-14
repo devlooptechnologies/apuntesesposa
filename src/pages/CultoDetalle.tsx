@@ -154,9 +154,8 @@ export default function CultoDetalle() {
 
       <div className="danger-zone">
         <button
-          className="btn btn-danger"
+          className={`btn btn-danger ${confirmando ? 'btn-confirm' : ''}`}
           onClick={handleEliminarCulto}
-          disabled={confirmando}
         >
           <Trash2 size={16} />
           {confirmando ? '¿Confirmar eliminación?' : 'Eliminar culto'}

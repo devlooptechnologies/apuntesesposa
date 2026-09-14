@@ -266,6 +266,15 @@ a {
   background: rgba(239, 68, 68, 0.15);
 }
 
+.btn-confirm {
+  background: #dc2626;
+  color: #fff;
+}
+
+.btn-confirm:hover {
+  background: #b91c1c;
+}
+
 .btn-block {
   width: 100%;
 }
