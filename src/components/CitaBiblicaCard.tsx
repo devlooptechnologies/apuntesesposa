@@ -1,8 +1,9 @@
-import { BookOpen, Trash2 } from 'lucide-react'
+import { BookOpen, Pencil, Trash2 } from 'lucide-react'
 import type { CitaBiblica } from '../types'
 
 interface Props {
   cita: CitaBiblica
+  onEditar?: (cita: CitaBiblica) => void
   onEliminar?: (id: string) => void
 }
 
@@ -13,7 +14,7 @@ function referencia(cita: CitaBiblica) {
   return `${cita.libro} ${cita.capitulo}:${cita.versiculo_inicio}`
 }
 
-export default function CitaBiblicaCard({ cita, onEliminar }: Props) {
+export default function CitaBiblicaCard({ cita, onEditar, onEliminar }: Props) {
   return (
     <div className="cita-card">
       <div className="cita-card-top">
@@ -23,16 +24,28 @@ export default function CitaBiblicaCard({ cita, onEliminar }: Props) {
             <strong>{referencia(cita)}</strong>
           </span>
         </div>
-        {onEliminar && (
-          <button
-            className="icon-btn danger"
-            onClick={() => onEliminar(cita.id)}
-            title="Eliminar cita"
-            aria-label="Eliminar cita"
-          >
-            <Trash2 size={15} />
-          </button>
-        )}
+        <div className="cita-card-actions">
+          {onEditar && (
+            <button
+              className="icon-btn"
+              onClick={() => onEditar(cita)}
+              title="Editar cita"
+              aria-label="Editar cita"
+            >
+              <Pencil size={15} />
+            </button>
+          )}
+          {onEliminar && (
+            <button
+              className="icon-btn danger"
+              onClick={() => onEliminar(cita.id)}
+              title="Eliminar cita"
+              aria-label="Eliminar cita"
+            >
+              <Trash2 size={15} />
+            </button>
+          )}
+        </div>
       </div>
       <p className="cita-verse">«{cita.texto}»</p>
       {cita.explicacion && (

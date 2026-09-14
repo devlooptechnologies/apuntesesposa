@@ -145,3 +145,51 @@ export async function eliminarCita(id: string) {
   const { error } = await supabase.from('citas_biblicas').delete().eq('id', id)
   if (error) throw new Error(error.message)
 }
+
+export async function actualizarCulto(
+  id: string,
+  data: {
+    titulo: string
+    fecha?: string
+    predicador?: string
+    lugar?: string
+    descripcion?: string
+  }
+) {
+  const { error } = await supabase
+    .from('cultos')
+    .update({
+      titulo: data.titulo,
+      fecha: data.fecha || null,
+      predicador: data.predicador || null,
+      lugar: data.lugar || null,
+      descripcion: data.descripcion || null,
+    })
+    .eq('id', id)
+  if (error) throw new Error(error.message)
+}
+
+export async function actualizarCita(
+  id: string,
+  data: {
+    libro: string
+    capitulo: number
+    versiculo_inicio: number
+    versiculo_fin?: number | null
+    texto?: string
+    explicacion?: string
+  }
+) {
+  const { error } = await supabase
+    .from('citas_biblicas')
+    .update({
+      libro: data.libro,
+      capitulo: data.capitulo,
+      versiculo_inicio: data.versiculo_inicio,
+      versiculo_fin: data.versiculo_fin ?? null,
+      texto: data.texto || null,
+      explicacion: data.explicacion || null,
+    })
+    .eq('id', id)
+  if (error) throw new Error(error.message)
+}

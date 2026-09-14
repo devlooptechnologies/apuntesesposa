@@ -6,6 +6,7 @@ import {
   Church,
   Loader2,
   MessageSquareQuote,
+  Pencil,
   Trash2,
   User,
 } from 'lucide-react'
@@ -13,12 +14,14 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import CitaBiblicaCard from '../components/CitaBiblicaCard'
 import CitaBiblicaForm from '../components/CitaBiblicaForm'
 import { eliminarCita, eliminarCulto, useCultoDetalle } from '../hooks/useCultos'
+import type { CitaBiblica } from '../types'
 
 export default function CultoDetalle() {
   const { id } = useParams<{ id: string }>()
   const navigate = useNavigate()
   const { culto, loading, error, recargar } = useCultoDetalle(id)
   const [confirmando, setConfirmando] = useState(false)
+  const [editandoCita, setEditandoCita] = useState<CitaBiblica | null>(null)
 
   async function handleEliminarCita(citaId: string) {
     try {
@@ -80,7 +83,13 @@ export default function CultoDetalle() {
             })}
           </div>
         )}
-        <h1>{culto.titulo}</h1>
+        <div className="detail-titulo-row">
+          <h1>{culto.titulo}</h1>
+          <Link to={`/culto/${culto.id}/editar`} className="btn btn-outline sm">
+            <Pencil size={15} />
+            Editar
+          </Link>
+        </div>
         <div className="detail-meta">
           {culto.predicador && (
             <span className="chip">
@@ -118,13 +127,29 @@ export default function CultoDetalle() {
               <CitaBiblicaCard
                 key={cita.id}
                 cita={cita}
+                onEditar={() => setEditandoCita(cita)}
                 onEliminar={handleEliminarCita}
               />
             ))}
           </div>
         )}
 
-        <CitaBiblicaForm cultoId={culto.id} onCitaAgregada={recargar} />
+        {editandoCita ? (
+          <CitaBiblicaForm
+            cultoId={culto.id}
+            cita={editandoCita}
+            onGuardada={async () => {
+              setEditandoCita(null)
+              await recargar()
+            }}
+            onCancelar={() => setEditandoCita(null)}
+          />
+        ) : (
+          <CitaBiblicaForm
+            cultoId={culto.id}
+            onGuardada={recargar}
+          />
+        )}
       </div>
 
       <div className="danger-zone">

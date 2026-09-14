@@ -1,22 +1,25 @@
 import type { FormEvent } from 'react'
 import { useState } from 'react'
 import { BookOpen, Plus } from 'lucide-react'
-import { agregarCita } from '../hooks/useCultos'
+import { agregarCita, actualizarCita } from '../hooks/useCultos'
 import type { CitaBiblica } from '../types'
 
 interface Props {
   cultoId: string
-  onCitaAgregada: (cita: CitaBiblica) => void
+  cita?: CitaBiblica
+  onGuardada: (cita: CitaBiblica) => void
+  onCancelar?: () => void
 }
 
-export default function CitaBiblicaForm({ cultoId, onCitaAgregada }: Props) {
-  const [abierto, setAbierto] = useState(false)
-  const [libro, setLibro] = useState('')
-  const [capitulo, setCapitulo] = useState('')
-  const [versiculoInicio, setVersiculoInicio] = useState('')
-  const [versiculoFin, setVersiculoFin] = useState('')
-  const [texto, setTexto] = useState('')
-  const [explicacion, setExplicacion] = useState('')
+export default function CitaBiblicaForm({ cultoId, cita, onGuardada, onCancelar }: Props) {
+  const modoEdicion = Boolean(cita)
+  const [abierto, setAbierto] = useState(!cita)
+  const [libro, setLibro] = useState(cita?.libro ?? '')
+  const [capitulo, setCapitulo] = useState(cita?.capitulo?.toString() ?? '')
+  const [versiculoInicio, setVersiculoInicio] = useState(cita?.versiculo_inicio?.toString() ?? '')
+  const [versiculoFin, setVersiculoFin] = useState(cita?.versiculo_fin?.toString() ?? '')
+  const [texto, setTexto] = useState(cita?.texto ?? '')
+  const [explicacion, setExplicacion] = useState(cita?.explicacion ?? '')
   const [guardando, setGuardando] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -31,23 +34,35 @@ export default function CitaBiblicaForm({ cultoId, onCitaAgregada }: Props) {
 
     setGuardando(true)
     try {
-      const cita = await agregarCita({
-        culto_id: cultoId,
+      const payload = {
         libro: libro.trim(),
         capitulo: Number(capitulo),
         versiculo_inicio: Number(versiculoInicio),
         versiculo_fin: versiculoFin ? Number(versiculoFin) : null,
         texto: texto.trim() || undefined,
         explicacion: explicacion.trim() || undefined,
-      })
-      onCitaAgregada(cita)
-      setLibro('')
-      setCapitulo('')
-      setVersiculoInicio('')
-      setVersiculoFin('')
-      setTexto('')
-      setExplicacion('')
-      setAbierto(false)
+      }
+
+      let result: CitaBiblica
+
+      if (modoEdicion && cita) {
+        await actualizarCita(cita.id, payload)
+        result = { ...cita, ...payload }
+      } else {
+        result = await agregarCita({ culto_id: cultoId, ...payload })
+      }
+
+      onGuardada(result)
+
+      if (!modoEdicion) {
+        setLibro('')
+        setCapitulo('')
+        setVersiculoInicio('')
+        setVersiculoFin('')
+        setTexto('')
+        setExplicacion('')
+        setAbierto(false)
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Error al guardar la cita.')
     } finally {
@@ -55,7 +70,15 @@ export default function CitaBiblicaForm({ cultoId, onCitaAgregada }: Props) {
     }
   }
 
-  if (!abierto) {
+  function cancelar() {
+    if (modoEdicion) {
+      onCancelar?.()
+    } else {
+      setAbierto(false)
+    }
+  }
+
+  if (!abierto && !modoEdicion) {
     return (
       <button
         className="btn btn-outline btn-block"
@@ -71,7 +94,7 @@ export default function CitaBiblicaForm({ cultoId, onCitaAgregada }: Props) {
     <form className="cita-form" onSubmit={handleSubmit}>
       <div className="cita-form-header">
         <BookOpen size={18} />
-        <span>Nueva cita bíblica</span>
+        <span>{modoEdicion ? 'Editar cita bíblica' : 'Nueva cita bíblica'}</span>
       </div>
 
       <div className="grid-3">
@@ -165,12 +188,12 @@ export default function CitaBiblicaForm({ cultoId, onCitaAgregada }: Props) {
         <button
           type="button"
           className="btn btn-ghost"
-          onClick={() => setAbierto(false)}
+          onClick={cancelar}
         >
           Cancelar
         </button>
         <button type="submit" className="btn btn-primary" disabled={guardando}>
-          {guardando ? 'Guardando...' : 'Guardar cita'}
+          {guardando ? 'Guardando...' : modoEdicion ? 'Actualizar cita' : 'Guardar cita'}
         </button>
       </div>
     </form>
