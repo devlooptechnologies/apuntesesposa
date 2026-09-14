@@ -3,7 +3,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Calendar, Loader2, Save } from 'lucide-react'
 import { crearCulto } from '../hooks/useCultos'
-import { isSupabaseConfigured } from '../lib/supabase'
 
 export default function CrearCulto() {
   const navigate = useNavigate()
@@ -42,13 +41,6 @@ export default function CrearCulto() {
   return (
     <div className="page page-narrow">
       <h1>Nuevo culto</h1>
-
-      {!isSupabaseConfigured && (
-        <div className="banner warn">
-          <strong>Supabase no está configurado.</strong>
-          <span> Revisa el archivo .env (ver README).</span>
-        </div>
-      )}
 
       <form className="cita-form" onSubmit={handleSubmit}>
         <label className="field">

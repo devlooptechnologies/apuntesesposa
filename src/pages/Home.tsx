@@ -3,7 +3,6 @@ import { ArrowRight, BookOpen, Loader2, Search } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import CultoCard from '../components/CultoCard'
 import { useCultos } from '../hooks/useCultos'
-import { isSupabaseConfigured } from '../lib/supabase'
 
 export default function Home() {
   const { cultos, loading } = useCultos()
@@ -28,18 +27,6 @@ export default function Home() {
           predicación en un solo lugar.
         </p>
       </div>
-
-      {!isSupabaseConfigured && (
-        <div className="banner warn">
-          <strong>Supabase no está configurado.</strong>
-          <span>
-            {' '}
-            Crea un archivo <code>.env</code> con{' '}
-            <code>VITE_SUPABASE_URL</code> y{' '}
-            <code>VITE_SUPABASE_ANON_KEY</code> (ver README).
-          </span>
-        </div>
-      )}
 
       <div className="toolbar">
         <div className="search-box">

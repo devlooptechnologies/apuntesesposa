@@ -15,9 +15,7 @@ function App() {
           <Route path="/culto/:id" element={<CultoDetalle />} />
         </Routes>
       </main>
-      <footer className="footer">
-        Mis Apuntes · creado con React + Supabase
-      </footer>
+      <footer className="footer">Mis Apuntes</footer>
     </BrowserRouter>
   )
 }
