@@ -8,7 +8,7 @@ import { isSupabaseConfigured } from '../lib/supabase'
 export default function CrearCulto() {
   const navigate = useNavigate()
   const [titulo, setTitulo] = useState('')
-  const [fecha, setFecha] = useState(new Date().toISOString().slice(0, 10))
+  const [fecha, setFecha] = useState('')
   const [predicador, setPredicador] = useState('')
   const [lugar, setLugar] = useState('')
   const [descripcion, setDescripcion] = useState('')
@@ -62,7 +62,7 @@ export default function CrearCulto() {
         </label>
 
         <label className="field">
-          <span>Fecha</span>
+          <span>Fecha (opcional)</span>
           <div className="field-icon">
             <Calendar size={16} />
             <input

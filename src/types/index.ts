@@ -1,7 +1,7 @@
 export interface Culto {
   id: string
   titulo: string
-  fecha: string
+  fecha: string | null
   predicador?: string | null
   lugar?: string | null
   descripcion?: string | null

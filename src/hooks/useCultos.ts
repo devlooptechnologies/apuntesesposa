@@ -17,7 +17,8 @@ export function useCultos() {
     const { data, error } = await supabase
       .from('cultos')
       .select('*')
-      .order('fecha', { ascending: false })
+      .order('fecha', { ascending: false, nullsFirst: false })
+      .order('created_at', { ascending: false })
     if (error) {
       setError(error.message)
     } else {
@@ -83,7 +84,7 @@ export function useCultoDetalle(id: string | undefined) {
 
 export async function crearCulto(data: {
   titulo: string
-  fecha: string
+  fecha?: string
   predicador?: string
   lugar?: string
   descripcion?: string
@@ -93,7 +94,7 @@ export async function crearCulto(data: {
     .insert([
       {
         titulo: data.titulo,
-        fecha: data.fecha,
+        fecha: data.fecha || null,
         predicador: data.predicador || null,
         lugar: data.lugar || null,
         descripcion: data.descripcion || null,

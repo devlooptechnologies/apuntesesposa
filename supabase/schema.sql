@@ -7,7 +7,7 @@
 create table if not exists public.cultos (
   id uuid primary key default gen_random_uuid(),
   titulo text not null,
-  fecha date not null default current_date,
+  fecha date,
   predicador text,
   lugar text,
   descripcion text,

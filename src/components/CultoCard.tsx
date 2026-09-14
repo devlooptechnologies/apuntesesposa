@@ -9,9 +9,11 @@ export default function CultoCard({ culto }: { culto: Culto }) {
 
   return (
     <article className="cul-card" onClick={() => navigate(`/culto/${culto.id}`)}>
-      <div className="cul-card-fecha">
-        {format(new Date(culto.fecha), 'd MMM yyyy', { locale: es })}
-      </div>
+      {culto.fecha && (
+        <div className="cul-card-fecha">
+          {format(new Date(culto.fecha), 'd MMM yyyy', { locale: es })}
+        </div>
+      )}
       <h2 className="cul-card-titulo">{culto.titulo}</h2>
       {culto.predicador && (
         <div className="cul-card-meta">

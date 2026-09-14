@@ -73,11 +73,13 @@ export default function CultoDetalle() {
       </Link>
 
       <div className="detail-header">
-        <div className="detail-fecha">
-          {format(new Date(culto.fecha), "EEEE d 'de' MMMM 'de' yyyy", {
-            locale: es,
-          })}
-        </div>
+        {culto.fecha && (
+          <div className="detail-fecha">
+            {format(new Date(culto.fecha), "EEEE d 'de' MMMM 'de' yyyy", {
+              locale: es,
+            })}
+          </div>
+        )}
         <h1>{culto.titulo}</h1>
         <div className="detail-meta">
           {culto.predicador && (
